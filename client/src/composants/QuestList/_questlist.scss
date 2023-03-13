@@ -1,0 +1,24 @@
+.quests_list{
+    @include flex; justify-content: center; gap: 30px;
+    padding-top: 20px;
+}
+
+.quest_popup{
+    display: none;
+    position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+    
+    .fond_noir{
+        position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+        background: rgba(0,0,0,0.5);
+        cursor: pointer;
+    }
+
+    .quest_infos_container{
+        position: absolute; top: 50%; left: 50%; translate: -50% -50%;
+        max-width: 90%; width: 800px; height: 80vh;
+        padding: 50px;
+        background: $blanc;
+    }
+
+    &.open{ display: block;}
+}

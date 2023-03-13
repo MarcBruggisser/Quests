@@ -1,0 +1,14 @@
+*{
+    margin: 0; padding: 0; border: 0;
+    box-sizing: border-box;
+    outline: none;
+}
+
+body{ text-align: center;}
+section, header, footer{ padding: 15px;}
+p{ margin: 10px 0;}
+ul{ list-style: none;}
+a{ text-decoration: none;}
+a, span, strong, em, i{ display: inline-block;}
+em, i{ font-style: normal;}
+img{ max-width: 100%; display: block;}
