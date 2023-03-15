@@ -8,6 +8,7 @@ body{ text-align: center;}
 section, header, footer{ padding: 15px;}
 p{ margin: 10px 0;}
 ul{ list-style: none;}
+li::marker{ display: none;}
 a{ text-decoration: none;}
 a, span, strong, em, i{ display: inline-block;}
 em, i{ font-style: normal;}

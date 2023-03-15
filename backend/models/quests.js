@@ -8,12 +8,9 @@ const questSchema = mongoose.Schema({
     description: {
         type: String
     },
-    univers: {
-        type: Object,
-        default: {
-            name:"Indéfini", 
-            questList: ["Pas de quête pour l'instant"]
-        }
+    universe: {
+        type: String,
+        default: "Indéfini"
     },
     finished: {
         type: Boolean,

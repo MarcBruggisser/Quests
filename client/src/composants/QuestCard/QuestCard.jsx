@@ -19,7 +19,7 @@ export default function Quest( props ) {
   }
 
   return (
-    <li className='quest' data={props.idQuest} data-univers={props.univers}>
+    <li className='quest' data={props.idQuest} data-universe={props.universe}>
       <NavLink to={`/quete/${props.idQuest}`}>Quête</NavLink>
       <strong>{props.name}</strong>
       <p>{props.description}</p>

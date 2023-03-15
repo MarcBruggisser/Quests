@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import Header from '../composants/Header/Header'
 import { useParams } from 'react-router-dom'
 import axios from 'axios';
 
@@ -22,7 +21,6 @@ export default function Quest() {
 
   return (
     <>
-      <Header />
 
       <section className="quest_section">
         <div className="infos">

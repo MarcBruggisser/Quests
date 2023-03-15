@@ -1,32 +1,37 @@
-import {useState, useEffect} from 'react';
-import Univers from '../Univers/Univers';
-import axios from 'axios';
+import {useState, useEffect} from "react"
+import axios from "axios"
+import Universe from "../Universe/Universe"
 
 export default function QuestList() {
 
   const [isLoading, setIsLoading] = useState(true);
-  const [quests, setQuests] = useState([]);
-  const [univers, setUnivers] = useState([]);
-
+  const [allQuests, setAllQuests] = useState([]);
+  const [allUniverses, setAllUniverses] = useState([]);
+  
   useEffect( () => {
-    axios.get('http://localhost:3000/api/quests')
-      .then( (res) => {
-        setIsLoading(false);
-        setQuests(res.data);
+    axios.get("http://localhost:3000/api/quests")
+    .then( res => {
 
-        if(isLoading === false){
-          quests.forEach( (quest) => {
-            if( !univers.includes(quest.univers)){ setUnivers(univers.push(quest.univers)); }
-          });
-          console.log(univers);
-        }
+      setAllQuests(res.data);
+      let universesList = [];
+      
+      allQuests.forEach( quest => {
+
+        // Create list of all universes
+        if( !universesList.includes(quest.universe) )
+        universesList.push(quest.universe);
+      })
+
+      setAllUniverses(universesList);
+      setIsLoading(false);      
       })
   }, [isLoading]);
 
+  if (isLoading) return (<div>Loading</div>);
 
   return (
     <>
-      { univers.map( (univers) => <Univers key={univers} title={univers} quests={universeQuests} /> )}
+      { allUniverses.map( universe => <Universe key={universe} name={universe} allQuests={allQuests} />) }
     </>
   )
 }

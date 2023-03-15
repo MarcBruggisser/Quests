@@ -10,10 +10,14 @@ function App() {
     <div className="App">
 
       <BrowserRouter>
+        
+        <Header />
+        
         <Routes>
           <Route path="/" element={ <Home /> } />
           <Route path="/quete/:id" element={ <Quest /> } />
         </Routes>
+
       </BrowserRouter>
 
       
