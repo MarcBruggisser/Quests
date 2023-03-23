@@ -1,0 +1,7 @@
+.side_nav{
+    padding: 30px;
+    background: rgb(225, 65, 65);
+
+    strong{ margin-bottom: 20px;}
+    ul li{ @include zoomhover;}
+}

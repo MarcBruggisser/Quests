@@ -1,17 +1,21 @@
 .quest_manager{
 
-    .add_quest_container{
+    .add_button_container{
         @include flex; gap: 15px; align-items: center;
         width: max-content; margin: 20px auto;
         cursor: pointer;
 
-        .add_quest{ 
+        .add{ 
             padding: 10px 15px;
             border: 2px solid black;
             @include zoomhover;
         }
+
+        &:hover .add{ scale: 1.05;
+
+        }
     }
-    .add_quest_window{ 
+    .add_window{ 
         max-height: 0px;
         overflow: hidden;
         @include animer;
@@ -26,12 +30,11 @@
                 padding: 15px;
                 border: 1px solid black;
 
-                &.quest_name{ margin-bottom: 10px;}
+                &.name{ margin-bottom: 10px;}
             }
-            .submit_quest{ @include zoomhover; }
+            .submit_button{ @include zoomhover; }
         }
         
         &.open { max-height: 400px;}
     }
-
 }

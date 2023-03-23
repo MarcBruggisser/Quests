@@ -1,5 +1,23 @@
 .quest_section{
     .actions{
-        .add_quest{ cursor: pointer;}
+        .add_button{ 
+            display: block;
+            cursor: pointer;
+        }
+
+        .universe_choice{ 
+            display: none;
+            position: absolute; left: 50%; translate: -50%;
+            padding: 30px;
+            background: $blanc;
+            border: 2px solid black;
+
+            li{
+                margin-bottom: 10px;
+                @include zoomhover;
+            }
+
+            &.open{ display: block;}
+        }
     }
 }

@@ -3,7 +3,7 @@ import QuestCard from '../QuestCard/QuestCard';
 
 export default function Univers( props ) {
 
-    let universeName = props.name;
+    const universeName = props.name;
     const allQuests = props.allQuests;
     const [allUniverseQuests, setAllUniverseQuests] = useState([]);
     let universeQuests = [];
@@ -19,7 +19,7 @@ export default function Univers( props ) {
     
     return (
         <div className="univers">
-            <h2>{props.name}</h2>
+            <h2>{universeName}</h2>
             <ul className='quests_list'>
                 {
                     allUniverseQuests.map( (quest) => <QuestCard key={quest._id} name={quest.name} description={quest.description} idQuest={quest._id} project={quest.project} /> )

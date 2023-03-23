@@ -10,6 +10,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // Les routes de l'appli
+const universeRoutes = require('./routes/universe');
+app.use('/api/universes', universeRoutes);
 const questRoutes = require('./routes/quests');
 app.use('/api/quests', questRoutes);
 
