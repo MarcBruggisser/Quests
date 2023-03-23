@@ -4,13 +4,13 @@ const router = express.Router();
 // Les controllers de l'appli
 const questController = require('../controllers/quests');
 
-router.get("/", questController.getAllTasks);
-router.get("/:id", questController.getOneTask);
+router.get("/", questController.getAllQuests);
+router.get("/:id", questController.getOneQuest);
 
-router.post("/", questController.createTask);
+router.post("/", questController.createQuest);
 
-router.put("/:id", questController.modifyTask);
+router.put("/:id", questController.modifyQuest);
 
-router.delete("/:id", questController.deleteTask);
+router.delete("/:id", questController.deleteQuest);
 
 module.exports = router;

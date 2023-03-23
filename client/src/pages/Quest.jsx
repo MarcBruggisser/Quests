@@ -7,13 +7,14 @@ export default function Quest() {
   let idQuest = useParams().id;
   const [isLoading, setIsLoading] = useState(true);
   const [infosQuest, setInfosQuest] = useState();
+  const [currentUniverse, setCurrentUniverse] = useState();
   const [allUniverses, setAllUniverses] = useState();
 
 
   useEffect(() => {
 
     axios.get(`http://localhost:3000/api/quests/${idQuest}`)
-      .then( (response) => { setInfosQuest(response.data); })
+      .then( (response) => { setInfosQuest(response.data); setCurrentUniverse(response.data.universe); })
     axios.get(`http://localhost:3000/api/universes`)
       .then( (response) => {
         setAllUniverses(response.data);
@@ -27,8 +28,12 @@ export default function Quest() {
     document.querySelector(".universe_choice").classList.toggle("open");
   }
   const changeUniverse = (e) => {
-    let newUniverse = e.target.textContent;
-    axios.put(`http://localhost:3000/api/quests/${idQuest}`, newUniverse);
+    let newUniverse = {name: e.target.textContent};
+    setCurrentUniverse(e.target.textContent);
+    axios.put(`http://localhost:3000/api/quests/${idQuest}`, newUniverse)
+      .then( ( res ) => {
+        console.log(res.data.universe);
+      })
     // document.querySelector(".universe_choice").classList.remove("open");
   }
 
@@ -38,12 +43,12 @@ export default function Quest() {
     <>
 
       <section className="quest_section">
-        <div className="infos" data-universe={infosQuest.universe}>
+        <div className="infos" data-universe={currentUniverse}>
           <h1>{infosQuest.name}</h1>
           <p>{infosQuest.description}</p>
         </div>
         <div className="actions">
-          <span className='add_button add_universe' onClick={openUniverseChangeWindow}>Univers : {infosQuest.universe}</span>
+          <span className='add_button add_universe' onClick={openUniverseChangeWindow}>Univers : {currentUniverse}</span>
           <ul className="universe_choice">
           { allUniverses.map( universe => <li key={universe._id} onClick={changeUniverse}>{universe.name}</li>) }
           </ul>
