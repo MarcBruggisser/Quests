@@ -1,0 +1,10 @@
+.universe{
+    margin-bottom: 50px;
+    
+    h2{ 
+        // background: url(../../assets/img/trash.svg);
+        cursor: pointer;
+    }
+
+    &:not(.open) ul{ display: none;}
+}

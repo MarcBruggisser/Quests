@@ -1,8 +1,8 @@
 
 import {BrowserRouter, Routes, Route} from "react-router-dom"
 import Header from "./composants/Header/Header"
-import Home from "./pages/Home"
-import Quest from "./pages/Quest"
+import Home from "./pages/Home/Home"
+import Quest from "./pages/Quest/Quest"
 
 function App() {
 

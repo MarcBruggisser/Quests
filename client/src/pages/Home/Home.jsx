@@ -1,6 +1,6 @@
-import QuestList from "../composants/QuestList/QuestList"
-import QuestManager from "../composants/QuestManager/QuestManager"
-import SideNav from "../composants/SideNav/SideNav"
+import QuestList from "../../composants/QuestList/QuestList"
+import QuestManager from "../../composants/QuestManager/QuestManager"
+import SideNav from "../../composants/SideNav/SideNav"
 
 export default function Home() {
     return (

@@ -15,6 +15,10 @@ const questSchema = mongoose.Schema({
     finished: {
         type: Boolean,
         default: false
+    },
+    subquests: {
+        type: Array,
+        default: []
     }
 })
 

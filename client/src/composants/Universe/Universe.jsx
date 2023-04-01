@@ -16,10 +16,14 @@ export default function Univers( props ) {
         })
         setAllUniverseQuests(universeQuests);
     }, [])
+
+    const toggleUniverse = (e) => {
+        e.target.closest(".universe").classList.toggle("open");
+    }
     
     return (
-        <div className="univers">
-            <h2>{universeName}</h2>
+        <div className="universe">
+            <h2 onClick={toggleUniverse}>{universeName}</h2>
             <ul className='quests_list'>
                 {
                     allUniverseQuests.map( (quest) => <QuestCard key={quest._id} name={quest.name} description={quest.description} idQuest={quest._id} project={quest.project} /> )

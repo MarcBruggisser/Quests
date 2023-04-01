@@ -1,12 +1,17 @@
+// Personnel framework
 @import "./unity/unity";
 
+// Global to the project
 @import "./global/variables";
 @import "./global/fonts";
 
-@import "../composants/QuestCard/quest_card.scss";
+// Components
+@import "../composants/QuestCard/quest_card";
+@import "../composants/Universe/universe";
 @import "../composants/QuestList/questlist";
 @import "../composants/QuestManager/questmanager";
 @import "../composants/SideNav/sidenav";
 
-@import "./pages/page_quete.scss";
-@import "./pages/home.scss";
+// Pages
+@import "../pages/Home/home";
+@import "../pages/Quest/page_quete";

@@ -25,6 +25,7 @@ export default function SideNav() {
             <ul>
                 { allUniverses.map( (universe) => <li key={universe.name}>{universe.name}</li>) }
             </ul>
+            <strong>Ajouter plusieurs univers</strong>
         </aside>
     )
 }

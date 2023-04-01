@@ -1,0 +1,48 @@
+.quest_section{
+    .actions{
+        .add_button{ 
+            display: block;
+            cursor: pointer;
+            
+            &.add_universe{
+                margin-bottom: 30px;
+            }
+        }
+
+        // Choose universe of the quest
+        .universe_choice{ 
+            display: none;
+            position: absolute; left: 50%; translate: -50%;
+            padding: 30px;
+            background: $blanc;
+            border: 2px solid black;
+
+            li{
+                margin-bottom: 10px;
+                @include zoomhover;
+            }
+
+            &.open{ display: block;}
+        }
+
+        .subquest_input_container{
+
+            .subquest_input{ padding: 5px 10px; border: 2px solid black;}
+            .subquest_input_submit{ cursor: pointer;}
+
+            &:not(.open){ display: none;}
+        }
+    }
+    .quests{
+        margin-top: 30px;
+
+        .subquest{
+            // Button to validate quest
+            .validate_quest{ cursor: pointer;}
+    
+            &:has(input:checked) span{
+                text-decoration: line-through;
+            }
+        }
+    }
+}
