@@ -86,16 +86,20 @@ export default function Quest() {
         modifyInput.remove();
         e.target.style.display = "inline-block";
       }
+      // If backspace key is pressed, the remove last character from the string of the input
+      else if( keydown.key === "Backspace" ){
+        newValue = keydown.target.value.slice(0, -1);
+      }
       // If neither escape nor Enter are pressed the newValue name for the quest is changed at each key press
       else if( keydown.key != "Enter" ) {
 
         // New quest name is the combination of all the keys pressed
         newValue = keydown.target.value + keydown.key;
         // Some of the keys need to be excluded though
-        let keysToRemove = ["Backspace", "Control", "Alt", "CapsLock", "Shift", "Unidentified", "AltGraph", "Tab", "ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown", "Graph", "ContextMenu", "Meta", "Delete", "Home", "End", "PageUp", "PageDown", "Insert", "NumLock"];
+        let keysToRemove = ["Control", "Alt", "CapsLock", "Shift", "Unidentified", "AltGraph", "Tab", "ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown", "Graph", "ContextMenu", "Meta", "Delete", "Home", "End", "PageUp", "PageDown", "Insert", "NumLock"];
         // For all of the keys, we remove them from the new name of the quest
         keysToRemove.forEach( (key) => newValue = newValue.replace(key, "") )
-
+        console.log(newValue);
       } 
       // If the enter key is pressed, we assign the new name to the list and close the input to change the name
       else{ 
