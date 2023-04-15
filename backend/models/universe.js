@@ -3,10 +3,15 @@ const mongoose = require('mongoose');
 const universeSchema = mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     description: {
         type: String
+    },
+    parents: {
+        type: Array,
+        default: []
     }
 })
 

@@ -2,9 +2,19 @@
     margin-bottom: 50px;
     
     h2{ 
-        // background: url(../../assets/img/trash.svg);
+        display: flex; justify-content: center; gap: 8px;
         cursor: pointer;
+
+        &::before{ 
+            content: ''; display: block; 
+            width: 30px; height: 30px; 
+            background: url(../assets/img/arrow_down.svg) no-repeat; background-size: contain;
+            rotate: 180deg; 
+        }
     }
 
-    &:not(.open) ul{ display: none;}
+    &:not(.open){
+        h2::before{ rotate: initial;}
+        ul{ display: none;}
+    } 
 }

@@ -27,7 +27,12 @@ exports.createQuest = (req, res) => {
 };
 
 exports.modifyQuest = (req, res) => {
-    questSchema.findOneAndUpdate({ _id: req.params.id }, {universe: req.body.name})
+    let questChanges = req.body;
+    console.log(req.params.id);
+
+    console.log(questChanges);
+
+    questSchema.updateOne( { _id: req.params.id }, {...questChanges} )
         
         .then( response => res.json(response).status(200) )
         .catch( err => console.log(err))

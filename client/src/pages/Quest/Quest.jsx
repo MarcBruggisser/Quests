@@ -23,6 +23,14 @@ export default function Quest() {
 
   }, [isLoading]);
 
+  // Function with API call PUT to modify the Quest
+  const modifyQuest = (questChanger) => {
+    axios.put(`http://localhost:3000/api/quests/${idQuest}`, questChanger)
+      .then( ( res ) => {
+        console.log("Bonjour");
+      })
+  }
+
   // Open window to change quest universe
   const openUniverseChangeWindow = () => {
     document.querySelector(".universe_choice").classList.toggle("open");
@@ -30,14 +38,12 @@ export default function Quest() {
   
   // Once the window is opened, change quest universe
   const changeUniverse = (e) => {
-    let newUniverse = {name: e.target.textContent};
+    // Modifs côté front
+    let newUniverse = {universe: e.target.textContent};
     setCurrentUniverse(e.target.textContent);
-
-    axios.put(`http://localhost:3000/api/quests/${idQuest}`, newUniverse)
-      .then( ( res ) => {
-        console.log(res.data.universe);
-      })
     document.querySelector(".universe_choice").classList.remove("open");
+    // Appel API
+    modifyQuest(newUniverse);
   }
 
   // Open window to add a subquest
@@ -72,43 +78,40 @@ export default function Quest() {
   
   // modifiy a subquest
   const modifySubQuest = (e) => {
-    e.target.style.display = "none";
-    let modifyInput = document.createElement("input");
-    e.target.parentNode.appendChild(modifyInput);
-    modifyInput.value = e.target.textContent;
-    modifyInput.focus();
+    e.target.style.display = "none"; let modifyInput = document.createElement("input");
+    e.target.after(modifyInput); modifyInput.value = e.target.textContent; modifyInput.focus();
     let newValue;
+    let modifyValue;
+    
 
-    // Côté front
-    modifyInput.addEventListener("keydown", (keydown) => {
+    // Côté front :
+    modifyInput.addEventListener("keyup", (keyup) => {
       // If the escape key is pressed, the input to change the name disappears and no changes are made
-      if( keydown.key === "Escape" ) { 
+      if( keyup.key === "Escape" ) { 
         modifyInput.remove();
         e.target.style.display = "inline-block";
-      }
-      // If backspace key is pressed, the remove last character from the string of the input
-      else if( keydown.key === "Backspace" ){
-        newValue = keydown.target.value.slice(0, -1);
       }
       // If neither escape nor Enter are pressed the newValue name for the quest is changed at each key press
-      else if( keydown.key != "Enter" ) {
-
+      else if( keyup.key != "Enter" ) {
         // New quest name is the combination of all the keys pressed
-        newValue = keydown.target.value + keydown.key;
+        newValue = keyup.target.value;
         // Some of the keys need to be excluded though
-        let keysToRemove = ["Control", "Alt", "CapsLock", "Shift", "Unidentified", "AltGraph", "Tab", "ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown", "Graph", "ContextMenu", "Meta", "Delete", "Home", "End", "PageUp", "PageDown", "Insert", "NumLock"];
+        let keysToRemove = ["Backspace", "Control", "Alt", "CapsLock", "Shift", "Unidentified", "AltGraph", "Tab", "ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown", "Graph", "ContextMenu", "Meta", "Delete", "Home", "End", "PageUp", "PageDown", "Insert", "NumLock"];
         // For all of the keys, we remove them from the new name of the quest
         keysToRemove.forEach( (key) => newValue = newValue.replace(key, "") )
-        console.log(newValue);
-      } 
-      // If the enter key is pressed, we assign the new name to the list and close the input to change the name
+        
+        if (e.target.classList.contains("quest_name")) { modifyValue = { name: newValue} }
+        if (e.target.classList.contains("quest_description")) { modifyValue = { description: newValue} }
+      }
+      // If the enter key is pressed, we assign the new name to the list and close the input to change the name, API call happens here
       else{ 
-        modifyInput.remove();
-        e.target.style.display = "inline-block";
-        e.target.textContent = newValue;
+        // Front
+        modifyInput.remove(); e.target.style.display = "block"; e.target.textContent = newValue;
+        // Back : API call PUT to modify the Quest
+        modifyQuest(modifyValue);
       }
     })
-    // Côté back
+
   }
 
   if(isLoading) return <div>Loading</div>
@@ -118,8 +121,8 @@ export default function Quest() {
       <section className="quest_section">
 
         <div className="infos" data-universe={currentUniverse}>
-          <h1>{infosQuest.name}</h1>
-          <p>{infosQuest.description}</p>
+          <h1 className='quest_name' onClick={modifySubQuest}>{infosQuest.name}</h1>
+          <p className='quest_description' onClick={modifySubQuest}>{infosQuest.description}</p>
         </div>
 
         <div className="actions">

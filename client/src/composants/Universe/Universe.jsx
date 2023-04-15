@@ -23,7 +23,7 @@ export default function Univers( props ) {
     
     return (
         <div className="universe">
-            <h2 onClick={toggleUniverse}>{universeName}</h2>
+            <h2 onClick={toggleUniverse}><span>{universeName}</span></h2>
             <ul className='quests_list'>
                 {
                     allUniverseQuests.map( (quest) => <QuestCard key={quest._id} name={quest.name} description={quest.description} idQuest={quest._id} project={quest.project} /> )
