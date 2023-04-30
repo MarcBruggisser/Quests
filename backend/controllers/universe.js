@@ -31,7 +31,7 @@ exports.createUniverse = (req, res) => {
                 })
                 universe.save()
                     .then( () => {
-                        console.log("Univers créée")
+                        console.log("Univers créé")
                         res.send(universe);
                     })
                     .catch( () => console.log("Erreur"))
@@ -41,8 +41,8 @@ exports.createUniverse = (req, res) => {
 };
 
 exports.modifyUniverse = (req, res) => {
-    universeSchema.findOneAndUpdate({ name: req.body.name })
-        .then( response =>  res.json(response))
+    universeSchema.updateOne( { _id: req.params.id }, {...req.body} )
+        .then( response => res.json(response).status(200) )
         .catch( err => console.log(err))
 };
 

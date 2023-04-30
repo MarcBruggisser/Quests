@@ -9,9 +9,16 @@ const universeSchema = mongoose.Schema({
     description: {
         type: String
     },
-    parents: {
-        type: Array,
-        default: []
+    root: {
+        type: Boolean,
+        default: true
+    },
+    parent: {
+        type: String,
+        default: "none"
+    },
+    orderToBeDisplayed: {
+        type: Number
     }
 })
 

@@ -27,7 +27,7 @@ export default function Quest() {
   const modifyQuest = (questChanger) => {
     axios.put(`http://localhost:3000/api/quests/${idQuest}`, questChanger)
       .then( ( res ) => {
-        console.log("Bonjour");
+        console.log("Quête modifiée");
       })
   }
 
@@ -82,7 +82,6 @@ export default function Quest() {
     e.target.after(modifyInput); modifyInput.value = e.target.textContent; modifyInput.focus();
     let newValue;
     let modifyValue;
-    
 
     // Côté front :
     modifyInput.addEventListener("keyup", (keyup) => {
@@ -102,6 +101,8 @@ export default function Quest() {
         
         if (e.target.classList.contains("quest_name")) { modifyValue = { name: newValue} }
         if (e.target.classList.contains("quest_description")) { modifyValue = { description: newValue} }
+        // if (e.target.classList.contains("subquest")) { modifyValue = { description: newValue} }
+        // Le code ne fonctionne pas avec la modif d'une sous-quête car on n'a pas acté le cas de figure où l'élément cliqué a la classe subquest
       }
       // If the enter key is pressed, we assign the new name to the list and close the input to change the name, API call happens here
       else{ 
@@ -118,7 +119,7 @@ export default function Quest() {
 
   return (
     <>
-      <section className="quest_section">
+      <main className="quest_section">
 
         <div className="infos" data-universe={currentUniverse}>
           <h1 className='quest_name' onClick={modifySubQuest}>{infosQuest.name}</h1>
@@ -146,7 +147,7 @@ export default function Quest() {
           <li className='no_subquests'>Circulez, y'a rien à voir</li>
         }
         </ul>
-      </section>
+      </main>
     </>
   )
 }

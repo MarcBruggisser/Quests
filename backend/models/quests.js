@@ -12,7 +12,14 @@ const questSchema = mongoose.Schema({
         type: String,
         default: "Indéfini"
     },
+    comments: {
+        type: [String]
+    },
     finished: {
+        type: Boolean,
+        default: false
+    },
+    archived: {
         type: Boolean,
         default: false
     },

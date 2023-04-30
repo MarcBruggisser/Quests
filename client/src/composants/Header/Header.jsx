@@ -7,6 +7,7 @@ export default function Header() {
         <nav>
             <ul>
                 <li> <NavLink to="/">Accueil</NavLink> </li>
+                <li> <NavLink to="/universes">Univers</NavLink> </li>
             </ul>
         </nav>
     </header>

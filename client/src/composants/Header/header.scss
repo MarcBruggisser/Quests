@@ -1,1 +1,5 @@
-header{ background: teal;}
+header{ 
+    background: teal;
+
+    nav ul{ @include flex; justify-content: center; gap: 30px; text-transform: uppercase;}
+}
