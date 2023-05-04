@@ -41,13 +41,53 @@ exports.createUniverse = (req, res) => {
 };
 
 exports.modifyUniverse = (req, res) => {
-    universeSchema.updateOne( { _id: req.params.id }, {...req.body} )
-        .then( response => res.json(response).status(200) )
-        .catch( err => console.log(err))
+
+    // Trouver d'abord l'univers dans la BDD avant d'en modifier ses données
+    universeSchema.findById( req.params.id )
+        .then( currentUniverse => { 
+            
+            // Update for isRoot boolean and id of the universe's parent
+            universeSchema.updateOne( { _id: currentUniverse._id }, {...req.body.universe} )
+                .then( response => { 
+                    res.json(response).status(200) 
+                
+                    
+                    // Once the updates on the universe itself is complete, we change data on the parent of the universe if any
+                    // Deux cas de figure : 
+                    if( req.body.universe.idParent != "none" ){
+                        universeSchema.findById( req.body.universe.idParent )
+                            .then( parentUniverse => {
+
+                                if( parentUniverse.idChildren.includes(req.params.id) === false){
+                                    universeSchema.updateOne( { _id: req.body.universe.idParent }, { $push: { idChildren: req.params.id } } )
+                                        .then( () => console.log("Univers enfant ajouté au parent"))
+                                        .catch( () => console.log("Marche pas"))
+                                }
+
+                                if( currentUniverse.idParent != "none" ){
+                                    universeSchema.updateOne( { _id: currentUniverse.idParent }, { $pull: { idChildren: req.params.id } } )
+                                        .then( () => console.log("Univers enfant retiré au parent") )
+                                }
+                            })
+                    }
+                    if( req.body.universe.idParent === "none" ){
+                            universeSchema.updateOne( { _id: currentUniverse.idParent }, { $pull: { idChildren: req.params.id } } )
+                                .then( () => console.log("Univers enfant retiré du parent"))
+                                .catch( () => console.log("Marche pas"))
+                    }
+                })
+                .catch( err => console.log(err))
+        })
+};
+
+exports.resetChildrenUniverses = (req, res) => {
+    universeSchema.updateMany( { idChildren: [] } )
+        .then( () => console.log("Marche"))
+        .catch( () => console.log("Marche pas"))
 };
 
 exports.deleteUniverse = (req, res) => {
     universeSchema.deleteOne({ name: req.body.name })
-        .then( res.send("Quête supprimée"))
+        .then( res.send("Univers supprimée"))
         .catch( err => res.send(err))
 };

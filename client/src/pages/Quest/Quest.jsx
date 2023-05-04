@@ -27,7 +27,7 @@ export default function Quest() {
   const modifyQuest = (questChanger) => {
     axios.put(`http://localhost:3000/api/quests/${idQuest}`, questChanger)
       .then( ( res ) => {
-        console.log("Quête modifiée");
+        console.log("Quête mise à jour");
       })
   }
 

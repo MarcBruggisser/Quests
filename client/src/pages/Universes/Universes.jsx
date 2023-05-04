@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios, { all } from 'axios';
+import axios from 'axios';
+import Test from '../../composants/Test/Test';
 
 export default function Universes() {
 
@@ -30,20 +31,23 @@ export default function Universes() {
         }
         // Au relâchement du drag and drop
         if(e._reactName === "onDragEnd"){
-            let universeChanges;
+
+            // Object to be sent in the HTTP request
+            let universeChanges = {};
+            
             if(idHoveredUniverse != undefined && idHoveredUniverse != e.target.getAttribute('data-id')){
                 let subUniverse = e.target;
                 subUniverse.classList.remove("root"); subUniverse.classList.add("sub_universe");
                 hoveredUniverse.append(subUniverse);
                 
                 // Object to be sent in the HTTP request
-                universeChanges = {root : false, parent : idHoveredUniverse};
+                universeChanges.universe = {isRoot : false, idParent : idHoveredUniverse};
             }
             if(idHoveredUniverse === null){
                 document.querySelector(".main_container").append(e.target);
                 e.target.classList.remove("sub_universe"); e.target.classList.add("root");
                 // Object to be sent in the HTTP request
-                universeChanges = {root : true, parent : "none"};
+                universeChanges.universe = {isRoot : true, idParent : "none"};
             }
             axios.put(`http://localhost:3000/api/universes/${e.target.getAttribute('data-id')}`, universeChanges)
                 .then( () => console.log("Modification d'univers réussi") )
@@ -51,7 +55,7 @@ export default function Universes() {
         }
     }
 
-    const hideSubuniverses = (e) => {
+    const hideSubUniverses = (e) => {
         let children = e.target.children;
         for (let all of children) {
             if ( all.classList.contains("sub_universe") ) all.classList.toggle("hidden");
@@ -60,16 +64,32 @@ export default function Universes() {
 
     return (
         <main className="universes">
-            <section>   
+            <section>
                 <article className='main_container' onDragEnter={clickForDrag}>
-                    { allUniverses.filter(rootUniverses => rootUniverses.root === true).map( (universe) => 
-                        <div key={universe.name} className="root" data-id={universe._id} draggable={true} onClick={hideSubuniverses} onDragStart={clickForDrag} onDragEnd={clickForDrag} onDragEnter={clickForDrag}>
+                    { allUniverses.filter(rootUniverses => rootUniverses.isRoot === true).map( (universe) => 
+                        
+                        <div key={universe.name} className="root" data-id={universe._id} draggable={true} onClick={hideSubUniverses} onDragStart={clickForDrag} onDragEnd={clickForDrag} onDragEnter={clickForDrag}>
+                            
                             <strong>{universe.name}</strong>
-                            { allUniverses.filter(subUniverses => subUniverses.parent === universe._id).map( (subUniverse) =>
-                                <div key={subUniverse.name} className="sub_universe" data-id={subUniverse._id} draggable={true} onDragStart={clickForDrag} onDragEnd={clickForDrag} onDragEnter={clickForDrag}><strong>{subUniverse.name}</strong></div>
-                            )
+
+                            { 
+                                universe.idChildren.map( subUniverseId =>
+                                    allUniverses.filter( subUniverses => subUniverses._id === subUniverseId ).map( subUniverse => 
+                                        <div key={subUniverse._id} className="sub_universe" data-id={subUniverse._id} draggable={true} onDragStart={clickForDrag} onDragEnd={clickForDrag} onDragEnter={clickForDrag}>
+
+                                            <strong>{subUniverse.name}</strong>
+
+                                            {/* {
+                                                subUniverse.idChildren
+                                            } */}
+                                        </div>)
+                                )
                             }
+
                         </div>) 
+                    }
+                    {
+                        // <Universes />
                     }
                 </article>
             </section>

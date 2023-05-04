@@ -10,6 +10,7 @@ router.get("/:id", universeController.getOneUniverse);
 router.post("/", universeController.createUniverse);
 
 router.put("/:id", universeController.modifyUniverse);
+router.put("/", universeController.resetChildrenUniverses);
 
 router.delete("/:id", universeController.deleteUniverse);
 
