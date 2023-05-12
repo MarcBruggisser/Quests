@@ -9,10 +9,6 @@ const universeSchema = mongoose.Schema({
     description: {
         type: String
     },
-    isRoot: {
-        type: Boolean,
-        default: true
-    },
     idRoot: {
         type: String,
         default: "none"
@@ -21,7 +17,7 @@ const universeSchema = mongoose.Schema({
         type: String,
         default: "none"
     },
-    idChildren: {
+    children: {
         type: Array,
     },
     orderToBeDisplayed: {

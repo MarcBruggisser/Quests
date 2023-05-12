@@ -26,9 +26,7 @@ export default function Quest() {
   // Function with API call PUT to modify the Quest
   const modifyQuest = (questChanger) => {
     axios.put(`http://localhost:3000/api/quests/${idQuest}`, questChanger)
-      .then( ( res ) => {
-        console.log("Quête mise à jour");
-      })
+      .then( () => console.log("Quête mise à jour") )
   }
 
   // Open window to change quest universe
@@ -61,18 +59,25 @@ export default function Quest() {
 
       let newSubQuest = { name: document.querySelector(".subquest_input").value }
 
-      let subQuestItem = document.createElement("li");
-      subQuestItem.classList.add("subquest");
-      subQuestItem.classList.add("unfinished");
+      let subQuestItem = document.createElement("li"); subQuestItem.classList.add("subquest"); subQuestItem.classList.add("unfinished");
       subQuestItem.innerHTML = `
         <input type="checkbox" class="validate_quest" />
         <span>${newSubQuest.name}</span>`;
       subQuestItem.querySelector("span").addEventListener("click", modifySubQuest);
       document.querySelector(".quests").appendChild(subQuestItem);
-      document.querySelector(".no_subquests").style.display = "none";
+      // document.querySelector(".no_subquests").style.display = "none";
 
       document.querySelector(".subquest_input").value = "";
       document.querySelector(".subquest_input_container").classList.remove("open");
+
+      // Logique backend à intégrer :
+      // On intègre des objets à l'intérieur du tableau
+      // Pour le côté front, on envoie simplement un nouvel objet pour la création de chaque nouvelle sous-quête.
+      // D'un point de vue du code, c'est un simple push sur l'array subquests du backend. Mais, le code de ce dernier n'a pas été conçu ainsi.
+      // Faire une condition dans le back-end pour que si une nouvelle clé apparaisse, il la push dans le tableau ? Risque de création d'une nouvelle clé à l'intérieur de la BDD
+      let subquests = {subquests: [ newSubQuest ] };
+
+      modifyQuest(subquests)
     } 
   }
   
@@ -101,13 +106,14 @@ export default function Quest() {
         
         if (e.target.classList.contains("quest_name")) { modifyValue = { name: newValue} }
         if (e.target.classList.contains("quest_description")) { modifyValue = { description: newValue} }
+        if (e.target.classList.contains("quest_subquest")) { modifyValue = { subquests: [newValue]} }
         // if (e.target.classList.contains("subquest")) { modifyValue = { description: newValue} }
         // Le code ne fonctionne pas avec la modif d'une sous-quête car on n'a pas acté le cas de figure où l'élément cliqué a la classe subquest
       }
       // If the enter key is pressed, we assign the new name to the list and close the input to change the name, API call happens here
       else{ 
         // Front
-        modifyInput.remove(); e.target.style.display = "block"; e.target.textContent = newValue;
+        modifyInput.remove(); e.target.style.display = "inline-block"; e.target.textContent = newValue;
         // Back : API call PUT to modify the Quest
         modifyQuest(modifyValue);
       }
@@ -139,10 +145,12 @@ export default function Quest() {
 
         <ul className="quests">
         { infosQuest.subquests.length != 0? 
-          <li className='subquest'>
-            <input type="checkbox" class="validate_quest" />
-            <span onClick={modifySubQuest}>{newSubQuest.name}</span>
-          </li>
+          infosQuest.subquests.map( subquest => 
+            <li key={subquest.name} className='subquest'>
+              <input type="checkbox" className="validate_quest" />
+              <span className='quest_subquest' onClick={modifySubQuest}>{subquest.name}</span>
+            </li>
+          )
           :
           <li className='no_subquests'>Circulez, y'a rien à voir</li>
         }

@@ -54,27 +54,27 @@ exports.modifyUniverse = (req, res) => {
                     
                     // Once the updates on the universe itself is complete, we change data on the parent of the universe if any
                     // Deux cas de figure : 
-                    if( req.body.universe.idParent != "none" ){
-                        universeSchema.findById( req.body.universe.idParent )
-                            .then( parentUniverse => {
+                    // if( req.body.universe.idParent != "none" ){
+                    //     universeSchema.findById( req.body.universe.idParent )
+                    //         .then( parentUniverse => {
 
-                                if( parentUniverse.idChildren.includes(req.params.id) === false){
-                                    universeSchema.updateOne( { _id: req.body.universe.idParent }, { $push: { idChildren: req.params.id } } )
-                                        .then( () => console.log("Univers enfant ajouté au parent"))
-                                        .catch( () => console.log("Marche pas"))
-                                }
+                    //             if( parentUniverse.idChildren.includes(req.params.id) === false){
+                    //                 universeSchema.updateOne( { _id: req.body.universe.idParent }, { $push: { idChildren: req.params.id } } )
+                    //                     .then( () => console.log("Univers enfant ajouté au parent"))
+                    //                     .catch( () => console.log("Marche pas"))
+                    //             }
 
-                                if( currentUniverse.idParent != "none" ){
-                                    universeSchema.updateOne( { _id: currentUniverse.idParent }, { $pull: { idChildren: req.params.id } } )
-                                        .then( () => console.log("Univers enfant retiré au parent") )
-                                }
-                            })
-                    }
-                    if( req.body.universe.idParent === "none" ){
-                            universeSchema.updateOne( { _id: currentUniverse.idParent }, { $pull: { idChildren: req.params.id } } )
-                                .then( () => console.log("Univers enfant retiré du parent"))
-                                .catch( () => console.log("Marche pas"))
-                    }
+                    //             if( currentUniverse.idParent != "none" ){
+                    //                 universeSchema.updateOne( { _id: currentUniverse.idParent }, { $pull: { idChildren: req.params.id } } )
+                    //                     .then( () => console.log("Univers enfant retiré au parent") )
+                    //             }
+                    //         })
+                    // }
+                    // if( req.body.universe.idParent === "none" ){
+                    //         universeSchema.updateOne( { _id: currentUniverse.idParent }, { $pull: { idChildren: req.params.id } } )
+                    //             .then( () => console.log("Univers enfant retiré du parent"))
+                    //             .catch( () => console.log("Marche pas"))
+                    // }
                 })
                 .catch( err => console.log(err))
         })

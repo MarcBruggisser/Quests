@@ -28,6 +28,8 @@ exports.createQuest = (req, res) => {
 
 exports.modifyQuest = (req, res) => {
 
+    console.log(req.body);
+
     questSchema.updateOne( { _id: req.params.id }, {...req.body} )
         .then( response => res.json(response).status(200) )
         .catch( err => console.log(err))

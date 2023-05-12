@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Test from '../../composants/Test/Test';
+import Test from '../../composants/Universes/Universes';
 
 export default function Universes() {
 
@@ -8,11 +8,27 @@ export default function Universes() {
     const [allUniverses, setAllUniverses] = useState();
 
     // API call to get data
-    useEffect(() => {
+    useEffect( () => {
 
         axios.get(`http://localhost:3000/api/universes`)
         .then( (response) => {
-            setAllUniverses(response.data);
+            let newOrganisation = [];
+            
+            response.data.forEach( universe => {
+                if( universe.idParent === "none" ) newOrganisation.push(universe)
+            });
+            response.data.forEach( universe => {
+                // Aller chercher dans le tableau des response l'univers qui a l'id du sous-univers avec l'idParent qui lui correspond
+                if( universe.idParent != "none" ){
+                    response.data.forEach( parentUniverse => {
+                        if( parentUniverse._id === universe.idParent ){
+                            parentUniverse.children.push(universe);
+                        }
+                    })
+                }
+            });
+            
+            setAllUniverses(newOrganisation);
             setIsLoading(false);
         })          
     
@@ -41,13 +57,13 @@ export default function Universes() {
                 hoveredUniverse.append(subUniverse);
                 
                 // Object to be sent in the HTTP request
-                universeChanges.universe = {isRoot : false, idParent : idHoveredUniverse};
+                universeChanges.universe = {idParent : idHoveredUniverse};
             }
             if(idHoveredUniverse === null){
                 document.querySelector(".main_container").append(e.target);
                 e.target.classList.remove("sub_universe"); e.target.classList.add("root");
                 // Object to be sent in the HTTP request
-                universeChanges.universe = {isRoot : true, idParent : "none"};
+                universeChanges.universe = {idParent : "none"};
             }
             axios.put(`http://localhost:3000/api/universes/${e.target.getAttribute('data-id')}`, universeChanges)
                 .then( () => console.log("Modification d'univers réussi") )
@@ -55,41 +71,14 @@ export default function Universes() {
         }
     }
 
-    const hideSubUniverses = (e) => {
-        let children = e.target.children;
-        for (let all of children) {
-            if ( all.classList.contains("sub_universe") ) all.classList.toggle("hidden");
-        }
-    }
-
     return (
         <main className="universes">
             <section>
-                <article className='main_container' onDragEnter={clickForDrag}>
-                    { allUniverses.filter(rootUniverses => rootUniverses.isRoot === true).map( (universe) => 
-                        
-                        <div key={universe.name} className="root" data-id={universe._id} draggable={true} onClick={hideSubUniverses} onDragStart={clickForDrag} onDragEnd={clickForDrag} onDragEnter={clickForDrag}>
-                            
-                            <strong>{universe.name}</strong>
-
-                            { 
-                                universe.idChildren.map( subUniverseId =>
-                                    allUniverses.filter( subUniverses => subUniverses._id === subUniverseId ).map( subUniverse => 
-                                        <div key={subUniverse._id} className="sub_universe" data-id={subUniverse._id} draggable={true} onDragStart={clickForDrag} onDragEnd={clickForDrag} onDragEnter={clickForDrag}>
-
-                                            <strong>{subUniverse.name}</strong>
-
-                                            {/* {
-                                                subUniverse.idChildren
-                                            } */}
-                                        </div>)
-                                )
-                            }
-
-                        </div>) 
-                    }
+                <article className='main_container' onDragEnter={clickForDrag} onDragEnd={clickForDrag}>
                     {
-                        // <Universes />
+                        allUniverses.map( (universe, index) => 
+                            <Test key={index} name={universe.name} _id={universe._id} className="root" children={universe.children} /> 
+                        )
                     }
                 </article>
             </section>

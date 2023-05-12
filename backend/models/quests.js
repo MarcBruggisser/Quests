@@ -13,7 +13,7 @@ const questSchema = mongoose.Schema({
         default: "Indéfini"
     },
     comments: {
-        type: [String]
+        type: [Object]
     },
     finished: {
         type: Boolean,
@@ -25,7 +25,7 @@ const questSchema = mongoose.Schema({
     },
     subquests: {
         type: Array,
-        default: []
+        default: [Object]
     }
 })
 

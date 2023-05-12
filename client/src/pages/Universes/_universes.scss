@@ -1,23 +1,22 @@
 main.universes{
-    padding: 30px 0;
 
     .main_container{ 
+        text-align: left;
         .root{ 
-            padding: 10px 20px;
+            padding: 20px 20px;
             border-radius: 10px; box-shadow: -1px 0px 7px 0px #000000;
             background: $blanc;
             cursor: pointer;
 
             .sub_universe{
-                width: 80%;
-                margin: 40px auto 0;
+                margin: 40px 0 20px 20px;
                 padding: 10px;
                 border: 2px solid black;
 
                 &.hidden{ display: none;}
             }
 
-            &:not(:last-child){ margin-bottom: 40px;}
+            &:not(:last-child){ margin-bottom: 60px;}
         }
     }
 }
