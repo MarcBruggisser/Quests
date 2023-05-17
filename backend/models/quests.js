@@ -12,6 +12,14 @@ const questSchema = mongoose.Schema({
         type: String,
         default: "Indéfini"
     },
+    idParent: {
+        type: String,
+        default: "none"
+    },
+    idRoot: {
+        type: String,
+        default: "none"
+    },
     comments: {
         type: [Object]
     },
@@ -22,10 +30,6 @@ const questSchema = mongoose.Schema({
     archived: {
         type: Boolean,
         default: false
-    },
-    subquests: {
-        type: Array,
-        default: [Object]
     }
 })
 

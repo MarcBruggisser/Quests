@@ -6,6 +6,7 @@ const questController = require('../controllers/quests');
 
 router.get("/", questController.getAllQuests);
 router.get("/:id", questController.getOneQuest);
+router.get("/subquests/:id", questController.getAllSubquests);
 
 router.post("/", questController.createQuest);
 

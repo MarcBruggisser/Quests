@@ -1,5 +1,6 @@
 import React from 'react';
-import axios from 'axios';
+import {createUniverse} from "../../functions/UniversesFunctions"
+import axios from "axios"
 
 export default function QuestManager() {
 
@@ -35,12 +36,9 @@ export default function QuestManager() {
     }
     const addNewUniverse = (e) => {
         e.preventDefault();
-        let universeName = document.getElementById("universe_title").value;
+        let universeItem = {name: document.getElementById("universe_title").value};
 
-        let universeItem = {name: universeName};
-        axios.post("http://localhost:3000/api/universes", universeItem)
-            .then( res => console.log("Univers créé") )
-            .catch( console.log("Erreur lors de la création de l'univers"))
+        createUniverse(universeItem);
     }
 
     return (    

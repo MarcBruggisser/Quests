@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { deleteQuestApi } from '../../functions/QuestsFunctions';
 import {NavLink} from "react-router-dom";
 import trash from '../../assets/img/trash.svg';
 
@@ -13,9 +13,7 @@ export default function Quest( props ) {
     let quete = e.target.closest(".quest");
     let dataQuete = quete.getAttribute("data");
 
-    axios.delete(`http://localhost:3000/api/quests/${dataQuete}`)
-      .then( () => { console.log("Quête supprimée"); quete.remove(); })
-      .catch( ( console.log("Erreur")) )
+    deleteQuestApi(quete, dataQuete);
   }
 
   return (

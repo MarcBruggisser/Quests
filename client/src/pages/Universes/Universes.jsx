@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Test from '../../composants/Universes/Universes';
+import UniversesTreeview from '../../composants/Universes/Universes';
 
 export default function Universes() {
 
@@ -77,7 +77,7 @@ export default function Universes() {
                 <article className='main_container' onDragEnter={clickForDrag} onDragEnd={clickForDrag}>
                     {
                         allUniverses.map( (universe, index) => 
-                            <Test key={index} name={universe.name} _id={universe._id} className="root" children={universe.children} /> 
+                            <UniversesTreeview key={index} name={universe.name} _id={universe._id} className="root" children={universe.children} /> 
                         )
                     }
                 </article>
