@@ -32,10 +32,7 @@ exports.createQuest = (req, res) => {
 // Modify quests infos
 exports.modifyQuest = (req, res) => {
 
-    // questSchema.findOne( {name: req.body.oldName} )
-    //     .then( (quest) => { console.log(quest);})
-
-    questSchema.updateOne( { name: req.body.oldName }, {...req.body} )
+    questSchema.updateOne( { _id: req.params.id }, {...req.body} )
         .then( response => {res.json(response).status(200); console.log(req.body); })
         .catch( err => console.log(err))
 };
