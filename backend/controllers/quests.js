@@ -17,20 +17,13 @@ exports.getAllSubquests = (req, res) => {
         .then( response => res.json(response))
 };
 
-// Modify quests infos
+// Create quests
 exports.createQuest = (req, res) => {
 
-    console.log(req.body);
-
-    const quest = new questSchema({
-        name: req.body.name,
-        description: req.body.description,
-        idParent : req.body.idParent,
-        idRoot : req.body.idParent
-    })
+    const quest = new questSchema({...req.body })
     quest.save()
-        .then( () => {
-            console.log("Tâche créée")
+        .then( (res) => {
+            console.log("Tâche créée", res._id)
             res.send(quest);
         })
         .catch( () => console.log("Erreur"))
@@ -39,14 +32,29 @@ exports.createQuest = (req, res) => {
 // Modify quests infos
 exports.modifyQuest = (req, res) => {
 
-    questSchema.updateOne( { _id: req.params.id }, {...req.body} )
+    // questSchema.findOne( {name: req.body.oldName} )
+    //     .then( (quest) => { console.log(quest);})
+
+    questSchema.updateOne( { name: req.body.oldName }, {...req.body} )
         .then( response => {res.json(response).status(200); console.log(req.body); })
         .catch( err => console.log(err))
 };
 
 // Delete quest
 exports.deleteQuest = (req, res) => {
+    let questsToDelete = [req.params.id]
+    questSchema.find( {idParent: req.params.id} )
+        .then( response => { 
+            if(response.length != 0){
+                console.log(response)
+                response.forEach( value => {
+                    deleteQuest(req.params.id === value.id);
+                    questSchema.findOneAndDelete(value._id)
+                        .then( () => console.log("Ca a marché")  )
+                })
+            }
+        })
     questSchema.deleteOne({ _id: req.params.id })
-        .then( res.send("Quête supprimée"))
-        .catch( err => res.send(err))
+        .then( console.log("Quête supprimée"))
+        .catch( console.log("Quête non supprimée"))
 };

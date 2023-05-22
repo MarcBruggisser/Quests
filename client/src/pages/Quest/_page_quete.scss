@@ -39,19 +39,29 @@
         margin-top: 30px;
 
         .subquest{
-            @include flex; gap: 0 15px;
-            padding: 10px 0;
+            padding: 10px 20px;
             text-align: left;
 
-            // Button to validate quest
-            input[type="checkbox"]{cursor: pointer;}
-            .add_subquest, .delete_subquest{ width: 25px; height: 25px; cursor: pointer;
-                &.add_subquest:hover{ filter: invert(20%) sepia(91%) saturate(2781%) hue-rotate(334deg) brightness(84%) contrast(107%);}
-                &.delete_subquest:hover{ filter: invert(20%) sepia(91%) saturate(2781%) hue-rotate(334deg) brightness(84%) contrast(107%);}
+            .subquest_display{ width: 20px; height: 20px; rotate: 270deg; cursor: pointer;
+                &.hidden{ rotate: 180deg;}
             }
-    
-            &:not(:hover){ .add_subquest, .delete_subquest{display: none;} }
-            &:has(input:checked) span{ text-decoration: line-through;}
+            .subquest_infos{
+                @include flex; gap: 0 15px;
+
+                // Button to validate quest
+                input[type="checkbox"]{ width: 25px; cursor: pointer;}
+                .add_subquest, .delete_subquest{ width: 25px; height: 25px; cursor: pointer;
+                    &.add_subquest:hover{ filter: invert(20%) sepia(91%) saturate(2781%) hue-rotate(334deg) brightness(84%) contrast(107%);}
+                    &.delete_subquest:hover{ filter: invert(20%) sepia(91%) saturate(2781%) hue-rotate(334deg) brightness(84%) contrast(107%);}
+                }
+                
+                &:not(:hover){ .add_subquest, .delete_subquest{display: none;} }
+            }
+            &.hidden{ display: none}
+            &.finished > .subquest_infos span{ text-decoration: line-through;}
+            .subquest_input_container{ padding: 0 45px;
+                &:not(.open){ display: none;}
+            }
         }
     }
 }

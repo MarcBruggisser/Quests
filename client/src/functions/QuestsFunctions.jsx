@@ -10,7 +10,8 @@ export default function Questfunctions() {
 
 const createQuestApi = (newQuest) => {
   axios.post(`http://localhost:3000/api/quests`, newQuest)
-    .then( () => console.log("Sous-quête crée") )
+    .then( () => console.log("Sous-quête crée" ) )
+    .catch( console.log("Erreur lors de la création de la quête"))
 }
 
 function getAllQuestsApi(isLoading, allQuests, allUniverses) {
@@ -33,23 +34,18 @@ function getAllQuestsApi(isLoading, allQuests, allUniverses) {
       return 
     })
 }
-const modifyQuestApi = (idQuest, questChanger) => {
-  axios.put(`http://localhost:3000/api/quests/${idQuest}`, questChanger)
+const modifyQuestApi = (modifyValue) => {
+  axios.put(`http://localhost:3000/api/quests/${modifyValue.idQuest}`, modifyValue)
     .then( () => console.log("Quête mise à jour") )
-}
-
-// Function with API call PUT to modify the subquest
-const modifySubquestApi = (questChanger) => {
-  axios.put(`http://localhost:3000/api/quests/${questChanger.subquestId}`, questChanger)
-    .then( () => console.log("Sous-quête mise à jour") )
+    .catch(err => console.log(err))
 }
 
 function deleteQuestApi(dataQuete) {
   axios.delete(`http://localhost:3000/api/quests/${dataQuete}`)
-      .then( () => { console.log("Quête supprimée"); })
-      .catch( ( console.log("Erreur")) )
+    .then( () => { console.log("Quête supprimée"); })
+    .catch( ( console.log("Erreur")) )
 }
 
 
 
-export { createQuestApi, deleteQuestApi, getAllQuestsApi, modifyQuestApi, modifySubquestApi };
+export { createQuestApi, deleteQuestApi, getAllQuestsApi, modifyQuestApi };

@@ -6,7 +6,8 @@ const questSchema = mongoose.Schema({
         required: true
     },
     description: {
-        type: String
+        type: String,
+        default: "none"
     },
     universe: {
         type: String,
