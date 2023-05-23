@@ -10,14 +10,14 @@ export default function Quest( props ) {
     // Mettre des inputs pour pouvoir changer la valeur du titre et de la description
   }
   const deleteQuest = (e) => {
-    let quete = e.target.closest(".quest");
-    let dataQuete = quete.getAttribute("data");
+    let quete = e.target.closest(".quest"); quete.remove();
+    let dataQuete = quete.getAttribute("data-id");
 
-    deleteQuestApi(quete, dataQuete);
+    deleteQuestApi(dataQuete);
   }
 
   return (
-    <li className='quest' data={props.idQuest} data-universe={props.universe}>
+    <li className='quest' data-id={props.idQuest} data-universe={props.universe}>
       <NavLink to={`/quete/${props.idQuest}`}>Quête</NavLink>
       <strong>{props.name}</strong>
       <p>{props.description}</p>

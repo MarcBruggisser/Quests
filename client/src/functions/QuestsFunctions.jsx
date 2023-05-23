@@ -8,9 +8,10 @@ export default function Questfunctions() {
   )
 }
 
+let dataToBeReturned;
 const createQuestApi = (newQuest) => {
   axios.post(`http://localhost:3000/api/quests`, newQuest)
-    .then( () => console.log("Sous-quête crée" ) )
+    .then( (res) => { localStorage.setItem("newSubquest", JSON.stringify(res.data) ); })
     .catch( console.log("Erreur lors de la création de la quête"))
 }
 
@@ -47,5 +48,7 @@ function deleteQuestApi(dataQuete) {
 }
 
 
-
+// Fonctions
 export { createQuestApi, deleteQuestApi, getAllQuestsApi, modifyQuestApi };
+// Variables
+export {dataToBeReturned}

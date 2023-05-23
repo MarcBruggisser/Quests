@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios';
 import {createQuestApi, modifyQuestApi, deleteQuestApi} from '../../functions/QuestsFunctions';
 import Trash from './../../assets/img/trash.svg';
 import plusCircle from './../../assets/img/plus_circle.svg';
@@ -18,11 +19,11 @@ export default function Subquest( props ) {
         if( inputHasFocus === false ) inputHasFocus = true;
         else inputHasFocus = false;
     }
-    const modifySubquest = (e) => {  
+    const modifySubquest = (e) => {
         e.target.style.display = "none"; let modifyInput = document.createElement("input");
         e.target.after(modifyInput); modifyInput.value = e.target.textContent; modifyInput.focus();
         let newValue;
-        let modifyValue;
+        let modifyValue = {idQuest: e.target.closest(".subquest").querySelector(".subquest_infos").getAttribute("data-id")};
     
         modifyInput.addEventListener("keyup", (keyup) => {
           // If the escape key is pressed, the input to change the name disappears and no changes are made
@@ -39,7 +40,7 @@ export default function Subquest( props ) {
             // For all of the keys, we remove them from the new name of the quest
             keysToRemove.forEach( (key) => newValue = newValue.replace(key, "") )
             
-            if (e.target.classList.contains("quest_subquest")) { modifyValue = { name: newValue, idQuest: e.target.parentNode.getAttribute("data-id")}; }
+            if (e.target.classList.contains("quest_subquest")) { modifyValue.name = newValue; }
           }
           // If the enter key is pressed, we assign the new name to the list and close the input to change the name, API call happens here
           else{ 
@@ -55,28 +56,29 @@ export default function Subquest( props ) {
         if(  inputHasFocus === true && e.key === "Enter" ){ 
 
             let newSubQuest = { name: e.target.value, idParent: idQuestToAddSubquest, idRoot: props.idQuest }
-
-            let subQuestItem = document.createElement("div"); subQuestItem.classList.add("subquest");
-            subQuestItem.innerHTML = `<div class="subquest_infos">
-                <img src=${arrowHead} alt="arrow head" class='subquest_display' />
-                <input type="checkbox" class="finishToggler" />
-                <span>${newSubQuest.name}</span>
-                <img src=${plusCircle} alt="plus" class="add_subquest" />
-                <img src=${Trash} alt="trash" class="delete_subquest" />
-            </div>
-            <div class="subquest_input_container">
-                <input class="subquest_input" type="text" />
-            </div>`;
-            e.target.closest(".subquest").appendChild(subQuestItem);
-
-            subQuestItem.querySelector("span").addEventListener("click", modifySubquest);
-            subQuestItem.querySelector(".add_subquest").addEventListener("click", openSubQuestWindow);
-            subQuestItem.querySelector(".delete_subquest").addEventListener("click", deleteSubquest);
-
-            e.target.value = ""; e.target.parentNode.classList.remove("open");
-
             // backend
-            createQuestApi(newSubQuest);
+            axios.post(`http://localhost:3000/api/quests`, newSubQuest)
+                .then( (res) => { 
+                    let subQuestItem = document.createElement("div"); subQuestItem.classList.add("subquest");
+                    subQuestItem.innerHTML = `<div class="subquest_infos" data-id=${res.data._id}>
+                        <img src=${arrowHead} alt="arrow head" class='subquest_display' />
+                        <input type="checkbox" class="finishToggler" />
+                        <span class="quest_subquest">${newSubQuest.name}</span>
+                        <img src=${plusCircle} alt="plus" class="add_subquest" />
+                        <img src=${Trash} alt="trash" class="delete_subquest" />
+                    </div>
+                    <div class="subquest_input_container">
+                        <input class="subquest_input" type="text" />
+                    </div>`;
+                    e.target.closest(".subquest").appendChild(subQuestItem);
+                    e.target.value = ""; e.target.parentNode.classList.remove("open"); inputHasFocus = false;
+        
+                    subQuestItem.querySelector("span").addEventListener("click", modifySubquest);
+                    subQuestItem.querySelector(".add_subquest").addEventListener("click", openSubQuestWindow);
+                    subQuestItem.querySelector(".delete_subquest").addEventListener("click", deleteSubquest);
+                    subQuestItem.querySelector(".subquest_input").addEventListener("keyup", addSubQuests);
+
+                })
         } 
     }
     const displaySubquest = (e) => {
@@ -85,11 +87,12 @@ export default function Subquest( props ) {
     }
     const finishSubquest = (e) => {
         e.target.closest(".subquest").classList.toggle("finished");
-        modifyQuestApi(e.target.parentNode.getAttribute("data-id"), {finished: e.target.checked})
+        let modifyInput = {idQuest: e.target.closest(".subquest").querySelector(".subquest_infos").getAttribute("data-id"), finished: e.target.checked}
+        modifyQuestApi(modifyInput);
     }
     const deleteSubquest = (e) => {
         // Backend : API call
-        deleteQuestApi(e.target.parentNode.getAttribute("data-id"));
+        deleteQuestApi(e.target.closest(".subquest").querySelector(".subquest_infos").getAttribute("data-id"));
         // Frontend : Node removal
         e.target.closest(".subquest").remove();
     }

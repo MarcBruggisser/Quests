@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios';
 import {createQuestApi, modifyQuestApi, deleteQuestApi} from '../../functions/QuestsFunctions';
+import {dataToBeReturned} from '../../functions/QuestsFunctions';
 import {getAllUniversesApi} from '../../functions/UniversesFunctions';
 import Trash from './../../assets/img/trash.svg';
 import plusCircle from './../../assets/img/plus_circle.svg';
@@ -52,16 +53,24 @@ export default function Quest() {
   // Once the window is opened, change quest universe
   const changeUniverse = (e) => {
     // Modifs côté front
-    let newUniverse = {universe: e.target.textContent};
+    let newUniverse = {idQuest: idQuest, universe: e.target.textContent};
     setCurrentUniverse(e.target.textContent);
     document.querySelector(".universe_choice").classList.remove("open");
     // Appel API
-    modifyQuestApi(idQuest, newUniverse);
+    modifyQuestApi(newUniverse);
   }
 
-  const openSubQuestWindow = () => {
-    document.querySelector(".subquest_input_container").classList.toggle("open");
-    document.querySelector(".subquest_input").focus();
+  let idQuestToAddSubquest;
+  const openSubQuestWindow = (e) => {
+    if( e.target.classList.contains("add_button") ){
+      idQuestToAddSubquest = idQuest;
+      document.querySelector(".subquest_input_container").classList.toggle("open");
+      document.querySelector(".subquest_input").focus();
+    } else{
+      idQuestToAddSubquest = e.target.closest(".subquest").querySelector(".subquest_infos").getAttribute("data-id");
+      e.target.closest(".subquest").querySelector(".subquest_input_container").classList.add("open");
+      e.target.closest(".subquest").querySelector(".subquest_input").focus();
+    }
     
     if( inputHasFocus === false ) inputHasFocus = true;
     else inputHasFocus = false;
@@ -71,41 +80,49 @@ export default function Quest() {
     if(  inputHasFocus === true && e.key === "Enter" ){ 
 
       // backend
-      let newSubQuest = { name: document.querySelector(".subquest_input").value, idParent: idQuest, idRoot: idQuest }
-      createQuestApi(newSubQuest);
-      // Il faut ensuite récupérer l'id de la subquest qui vient d'être créée dans la BDD et placer cet id dans "subquest_infos"
+      let newSubQuest = { idParent: idQuestToAddSubquest, idRoot: idQuest }
+      if( idQuestToAddSubquest === idQuest){ newSubQuest.name = document.querySelector(".subquest_input").value;}
+      else{ newSubQuest.name = e.target.closest(".subquest").querySelector(".subquest_input").value;}
 
-      let subQuestItem = document.createElement("div"); subQuestItem.classList.add("subquest");
-      subQuestItem.innerHTML = `
-      <div class="subquest_infos" data-id=${subQuestItem._id}>
-        <img src=${arrowHead} alt="arrow head" class='subquest_display' />
-        <input type="checkbox" class="finishToggler" />
-        <span>${newSubQuest.name}</span>
-        <img src=${plusCircle} alt="plus" class="add_subquest" />
-        <img src=${Trash} alt="trash" class="delete_subquest" />
-      <div/>
-      <div class="subquest_input_container">
-          <input class="subquest_input" type="text" />
-      </div>`;
-      subQuestItem.querySelector("span").addEventListener("click", modifyQuest);
-      document.querySelector(".quests").appendChild(subQuestItem);
+      axios.post(`http://localhost:3000/api/quests`, newSubQuest)
+        .then( (res) => { 
+          let subQuestItem = document.createElement("div"); subQuestItem.classList.add("subquest");
+          subQuestItem.innerHTML = `
+          <div class="subquest_infos" data-id=${res.data._id}>
+            <img src=${arrowHead} alt="arrow head" class='subquest_display' />
+            <input type="checkbox" class="finishToggler" />
+            <span class="quest_subquest">${newSubQuest.name}</span>
+            <img src=${plusCircle} alt="plus" class="add_subquest" />
+            <img src=${Trash} alt="trash" class="delete_subquest" />
+          </div>
+          <div class="subquest_input_container">
+              <input class="subquest_input" type="text" />
+          </div>`;
+          if( idQuestToAddSubquest === idQuest){document.querySelector(".quests").appendChild(subQuestItem);} 
+          else{ e.target.closest(".subquest").appendChild(subQuestItem); e.target.parentNode.classList.remove("open");}
 
-      subQuestItem.querySelector("span").addEventListener("click", modifyQuest);
-      subQuestItem.querySelector(".add_subquest").addEventListener("click", openSubQuestWindow);
-      subQuestItem.querySelector(".delete_subquest").addEventListener("click", deleteSubquest);
+          subQuestItem.querySelector("span").addEventListener("click", modifyQuest);
+          subQuestItem.querySelector(".add_subquest").addEventListener("click", openSubQuestWindow);
+          subQuestItem.querySelector(".delete_subquest").addEventListener("click", deleteSubquest);
+          subQuestItem.querySelector(".subquest_input").addEventListener("keyup", addSubQuests);
+        })
+        .catch( err => console.log(err))
 
       if (document.querySelector(".no_subquests")) document.querySelector(".no_subquests").style.display = "none";
 
       document.querySelector(".subquest_input").value = ""; document.querySelector(".subquest_input_container").classList.remove("open"); inputHasFocus = false;
     }
   }
-  
   // modifiy a quest
   const modifyQuest = (e) => {
     e.target.style.display = "none"; let modifyInput = document.createElement("input");
     e.target.after(modifyInput); modifyInput.value = e.target.textContent; modifyInput.focus();
     let newValue;
     let modifyValue = {idQuest: idQuest};
+    if( e.target.closest(".subquest") != null ) {
+      modifyValue.idQuest = e.target.closest(".subquest").querySelector(".subquest_infos").getAttribute("data-id");
+      console.log(modifyValue);
+    }
 
     modifyInput.addEventListener("keyup", (keyup) => {
       // If the escape key is pressed, the input to change the name disappears and no changes are made
@@ -122,7 +139,7 @@ export default function Quest() {
         // For all of the keys, we remove them from the new name of the quest
         keysToRemove.forEach( (key) => newValue = newValue.replace(key, "") )
         
-        if (e.target.classList.contains("quest_name")) { modifyValue.name = newValue}
+        if (e.target.classList.contains("quest_name") || e.target.classList.contains("quest_subquest")) { modifyValue.name = newValue}
         if (e.target.classList.contains("quest_description")) { modifyValue.description = newValue }
         // Le code ne fonctionne pas avec la modif d'une sous-quête car on n'a pas acté le cas de figure où l'élément cliqué a la classe subquest
       }
