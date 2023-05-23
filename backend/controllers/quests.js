@@ -36,18 +36,6 @@ exports.modifyQuest = (req, res) => {
 
 // Delete quest
 exports.deleteQuest = (req, res) => {
-    // let questsToDelete = [req.params.id]
-    // questSchema.find( {idParent: req.params.id} )
-    //     .then( response => { 
-    //         if(response.length != 0){
-    //             console.log(response)
-    //             response.forEach( value => {
-    //                 deleteQuest(req.params.id === value.id);
-    //                 questSchema.findOneAndDelete(value._id)
-    //                     .then( () => console.log("Ca a marché")  )
-    //             })
-    //         }
-    //     })
     questSchema.deleteOne({ _id: req.params.id })
         .then( console.log("Quête supprimée"))
         .catch( console.log("Quête non supprimée"))

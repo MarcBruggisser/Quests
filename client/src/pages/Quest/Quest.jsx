@@ -154,10 +154,11 @@ export default function Quest() {
 
   }
   const deleteSubquest = (e) => {
-    // Backend : API call
-    deleteQuestApi(e.target.parentNode.getAttribute("data-id"));
+    let questsToBeDeleted = e.target.closest(".subquest").querySelectorAll(".subquest_infos");
     // Frontend : Node removal
     e.target.closest(".subquest").remove();
+    // Backend : API call
+    questsToBeDeleted.forEach( subquest => { deleteQuestApi(subquest.getAttribute("data-id"));  })
   }
 
   if(isLoading) return <div>Loading</div>

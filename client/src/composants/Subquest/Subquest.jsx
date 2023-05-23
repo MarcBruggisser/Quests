@@ -91,10 +91,11 @@ export default function Subquest( props ) {
         modifyQuestApi(modifyInput);
     }
     const deleteSubquest = (e) => {
-        // Backend : API call
-        deleteQuestApi(e.target.closest(".subquest").querySelector(".subquest_infos").getAttribute("data-id"));
+        let questsToBeDeleted = e.target.closest(".subquest").querySelectorAll(".subquest_infos");
         // Frontend : Node removal
         e.target.closest(".subquest").remove();
+        // Backend : API call
+        questsToBeDeleted.forEach( subquest => { deleteQuestApi(subquest.getAttribute("data-id"));  })
     }
 
     return (
