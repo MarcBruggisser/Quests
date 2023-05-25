@@ -77,13 +77,20 @@ export default function Subquest( props ) {
                     subQuestItem.querySelector(".add_subquest").addEventListener("click", openSubQuestWindow);
                     subQuestItem.querySelector(".delete_subquest").addEventListener("click", deleteSubquest);
                     subQuestItem.querySelector(".subquest_input").addEventListener("keyup", addSubQuests);
+                    subQuestItem.querySelector(".subquest_display").addEventListener("click", displaySubquest);
 
                 })
         } 
     }
     const displaySubquest = (e) => {
-        e.target.classList.toggle("hidden");
-        e.target.closest(".subquest").querySelectorAll('.subquest').forEach( subquest => subquest.classList.toggle("hidden"))
+        // front
+        e.target.classList.toggle("hidden"); e.target.closest(".subquest").classList.toggle("open");
+        // back
+        let changes = {idQuest: e.target.closest(".subquest").querySelector(".subquest_infos").getAttribute("data-id")};
+        if( e.target.closest(".subquest").classList.contains("open") ){ changes.isOpen = "open";}
+        else { changes.isOpen = "notOpen";}
+        modifyQuestApi(changes);
+
     }
     const finishSubquest = (e) => {
         e.target.closest(".subquest").classList.toggle("finished");
@@ -101,7 +108,7 @@ export default function Subquest( props ) {
     return (
         props.subquestsArray.map( subquest => 
             subquest.finished === true ?
-                <div key={subquest._id} className="subquest finished">
+                <div key={subquest._id} className={`subquest finished ${subquest.isOpen}`}>
                     <div className="subquest_infos" data-id={subquest._id}>
                     <img src={arrowHead} alt="arrow head" className='subquest_display' onClick={displaySubquest} />
                         <input type="checkbox" defaultChecked className='finishToggler' onClick={finishSubquest} /> 
@@ -115,7 +122,7 @@ export default function Subquest( props ) {
                     <Subquest subquestsArray={subquest.children} idQuest={props.idQuest} />
                 </div>
                 :
-                <div key={subquest._id} className="subquest">
+                <div key={subquest._id} className={`subquest ${subquest.isOpen}`}>
                     <div className="subquest_infos" data-id={subquest._id}>
                         <img src={arrowHead} alt="arrow head" className='subquest_display' onClick={displaySubquest} />
                         <input type="checkbox" className='finishToggler' onClick={finishSubquest} />

@@ -86,7 +86,7 @@ export default function Quest() {
 
       axios.post(`http://localhost:3000/api/quests`, newSubQuest)
         .then( (res) => { 
-          let subQuestItem = document.createElement("div"); subQuestItem.classList.add("subquest");
+          let subQuestItem = document.createElement("div"); subQuestItem.classList.add("subquest"); subQuestItem.classList.add("open");
           subQuestItem.innerHTML = `
           <div class="subquest_infos" data-id=${res.data._id}>
             <img src=${arrowHead} alt="arrow head" class='subquest_display' />
@@ -105,6 +105,7 @@ export default function Quest() {
           subQuestItem.querySelector(".add_subquest").addEventListener("click", openSubQuestWindow);
           subQuestItem.querySelector(".delete_subquest").addEventListener("click", deleteSubquest);
           subQuestItem.querySelector(".subquest_input").addEventListener("keyup", addSubQuests);
+          subQuestItem.querySelector(".subquest_display").addEventListener("click", displaySubquest);
         })
         .catch( err => console.log(err))
 
@@ -112,6 +113,16 @@ export default function Quest() {
 
       document.querySelector(".subquest_input").value = ""; document.querySelector(".subquest_input_container").classList.remove("open"); inputHasFocus = false;
     }
+  }
+  const displaySubquest = (e) => {
+    // front
+    e.target.classList.toggle("hidden"); e.target.closest(".subquest").classList.toggle("open");
+    // back
+    let changes = {idQuest: e.target.closest(".subquest").querySelector(".subquest_infos").getAttribute("data-id")};
+    if( e.target.closest(".subquest").classList.contains("open") ){ changes.isOpen = "open";}
+    else { changes.isOpen = "notOpen";}
+    modifyQuestApi(changes);
+
   }
   // modifiy a quest
   const modifyQuest = (e) => {

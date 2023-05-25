@@ -21,6 +21,10 @@ const questSchema = mongoose.Schema({
         type: String,
         default: "none"
     },
+    isOpen: {
+        type: String,
+        default: "open"
+    },
     comments: {
         type: [Object]
     },
