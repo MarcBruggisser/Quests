@@ -39,4 +39,7 @@ exports.deleteQuest = (req, res) => {
     questSchema.deleteMany({ _id: [...req.body] })
         .then( console.log("Quête supprimée"))
         .catch( console.log("Quête non supprimée"))
+    questSchema.deleteMany({ idRoot: [...req.body] })
+        .then( console.log("Quête supprimée"))
+        .catch( console.log("Quête non supprimée"))
 };
