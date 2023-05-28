@@ -102,7 +102,9 @@ export default function Subquest( props ) {
         // Frontend : Node removal
         e.target.closest(".subquest").remove();
         // Backend : API call
-        questsToBeDeleted.forEach( subquest => { deleteQuestApi(subquest.getAttribute("data-id"));  })
+        let questsToBeDeletedId = [];
+        questsToBeDeleted.forEach( subquest => questsToBeDeletedId.push(subquest.getAttribute("data-id")) )
+        deleteQuestApi(questsToBeDeletedId);
     }
 
     return (

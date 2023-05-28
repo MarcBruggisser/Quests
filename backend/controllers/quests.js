@@ -36,7 +36,7 @@ exports.modifyQuest = (req, res) => {
 
 // Delete quest
 exports.deleteQuest = (req, res) => {
-    questSchema.deleteOne({ _id: req.params.id })
+    questSchema.deleteMany({ _id: [...req.body] })
         .then( console.log("Quête supprimée"))
         .catch( console.log("Quête non supprimée"))
 };

@@ -11,7 +11,7 @@ export default function Quest( props ) {
   }
   const deleteQuest = (e) => {
     let quete = e.target.closest(".quest"); quete.remove();
-    let dataQuete = quete.getAttribute("data-id");
+    let dataQuete = [quete.getAttribute("data-id")];
 
     deleteQuestApi(dataQuete);
   }

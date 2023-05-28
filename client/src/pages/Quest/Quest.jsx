@@ -132,7 +132,6 @@ export default function Quest() {
     let modifyValue = {idQuest: idQuest};
     if( e.target.closest(".subquest") != null ) {
       modifyValue.idQuest = e.target.closest(".subquest").querySelector(".subquest_infos").getAttribute("data-id");
-      console.log(modifyValue);
     }
 
     modifyInput.addEventListener("keyup", (keyup) => {
@@ -162,14 +161,15 @@ export default function Quest() {
         modifyQuestApi(modifyValue);
       }
     })
-
   }
   const deleteSubquest = (e) => {
     let questsToBeDeleted = e.target.closest(".subquest").querySelectorAll(".subquest_infos");
     // Frontend : Node removal
     e.target.closest(".subquest").remove();
     // Backend : API call
-    questsToBeDeleted.forEach( subquest => { deleteQuestApi(subquest.getAttribute("data-id"));  })
+    let questsToBeDeletedId = [];
+    questsToBeDeleted.forEach( subquest => questsToBeDeletedId.push(subquest.getAttribute("data-id")) )
+    deleteQuestApi(questsToBeDeletedId);
   }
 
   if(isLoading) return <div>Loading</div>

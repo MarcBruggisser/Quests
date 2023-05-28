@@ -42,7 +42,7 @@ const modifyQuestApi = (modifyValue) => {
 }
 
 function deleteQuestApi(dataQuete) {
-  axios.delete(`http://localhost:3000/api/quests/${dataQuete}`)
+  axios.delete(`http://localhost:3000/api/quests`, {data : dataQuete})
     .then( () => { console.log("Quête supprimée"); })
     .catch( ( console.log("Erreur")) )
 }

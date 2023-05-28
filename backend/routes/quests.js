@@ -12,6 +12,6 @@ router.post("/", questController.createQuest);
 
 router.put("/:id", questController.modifyQuest);
 
-router.delete("/:id", questController.deleteQuest);
+router.delete("/", questController.deleteQuest);
 
 module.exports = router;
