@@ -59,7 +59,7 @@ export default function Subquest( props ) {
             // backend
             axios.post(`http://localhost:3000/api/quests`, newSubQuest)
                 .then( (res) => { 
-                    let subQuestItem = document.createElement("div"); subQuestItem.classList.add("subquest");
+                    let subQuestItem = document.createElement("div"); subQuestItem.classList.add("subquest"); subQuestItem.classList.add("open");
                     subQuestItem.innerHTML = `<div class="subquest_infos" data-id=${res.data._id}>
                         <img src=${arrowHead} alt="arrow head" class='subquest_display' />
                         <input type="checkbox" class="finishToggler" />
